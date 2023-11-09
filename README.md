@@ -5,7 +5,7 @@ Video overview: <https://youtu.be/7WJbSaupLiY>
 This repository serves as my capstone project for the CS50W course. In this project, I created a site for managing students' distance learning. The site allows you to create teacher and student accounts, teachers can create and manage classes and assignments for them, and students can submit assignments and track their grades.
 
 ## Overview of the Course
-This course equips me with the knowledge and practical skills required to build dynamic web applications using Python and JavaScript. Throughout the course, I explore web development fundamentals, including HTML, CSS, and JavaScript, while delving into Python for backend development. I learn how to create server-side applications, work with databases, and use Python frameworks like Flask and Django. PraBy the course's end, I have a robust foundation in web development, Python, and JavaScript, prepared for careers in web development or related fields.
+This course provides me with the knowledge and practical skills needed to create dynamic web apps in Python and JavaScript. Throughout the course, I will look at web programming principles such as HTML, CSS, and JavaScript, as well as Python for backend development. I am learning how to write server-side apps, interact with databases, and use Python frameworks such as Flask and Django. PraBy the conclusion of the course, I will have a solid foundation in web programming, Python, and JavaScript, and will be ready for professions in web development or similar sectors.
 
 
 ## Libraries used in the project
@@ -18,25 +18,27 @@ The following files are included in this repository:
 
 ## Project Description
 
-Upon visiting site, you are presented with two main options: creating a new account or logging in to an existing one. Once logged in, users can personalize their profiles with account information and add a profile photo. This site caters to two distinct user types: teachers and students.
+When you access the site, you are given two options: create a new account or log in to an existing one. Users may personalize their profiles with account information and upload a profile photo after logging in. This website is designed for two sorts of users: instructors and students.
 
-### Teacher's Account
+### Account of the Teacher
 
-Teachers enjoy several powerful features:
-- **Class Management:** They can create and edit classes.
-- **QR Code Access:** Upon creating a class, teachers receive a unique QR code that allows easy sharing.
-- **Class Customization:** Teachers can modify class details as needed.
-- **Content Folders:** In each class, teachers can create two types of content folders:
-  - **Materials:** Here, teachers can share valuable resources like lecture videos, textbooks, and more.
-  - **Assignments:** This folder is dedicated to student tasks, where teachers can review and grade answers with optional comments.
+Teachers benefit from a number of excellent features:
+- **Class Management:** They have the ability to create and change classes.
+- **QR Code Access:** When instructors create a class, they obtain a unique QR code that enables for simple sharing.
+- **Class Customization:** Teachers can change the features of their classes as needed.
+- **Content Folders:** Teachers can create two sorts of content folders in each class:
+  - **Materials:** Teachers can contribute useful materials such as lecture videos, textbooks, and more here.
+  - **Assignments:**  This folder is for student tasks, and teachers can evaluate and grade answers with optional comments in it.
 
-### Student Account
+### Account for Students
 
-Students have their own set of capabilities:
-- **Join Classes:** They can join classes by using the unique links provided by teachers.
-- **Access Learning Materials:** Students can access all educational materials shared by the teacher.
-- **Submit Homework:** For assignments, students can submit their answers and receive feedback and grades from the teacher.
-- **Grade Tracker:** Students can conveniently monitor their grades in their user profile.
+Students have their own set of skills:
+- **Join Classes:** They can enroll in classes by following the links supplied by professors.
+- **Access Learning resources:** Students get access to all of the teacher's instructional resources.
+- **Submit Homework:** Students can submit their responses to assignments and receive feedback and scores from the teacher.
+- **Grade Calculator:** Students may easily track their grades on their user profile.
+
+All pages on the site are dynamic and are changed as soon as a certain action is taken.
 
 
 ## Course URL
