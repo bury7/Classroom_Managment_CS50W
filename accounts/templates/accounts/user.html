@@ -1,0 +1,210 @@
+{% extends 'classroom/layout.html' %}
+
+{% load static %}
+
+{% block title %}Classroom {{user.username|capfirst}} Profile{% endblock %}
+
+{% block main %}
+
+
+    <section>
+        <div class="container py-5 highlight-container">
+            <div class="row">
+
+                <div class="col-lg-4 d-flex">
+                    <div class="card mb-4 w-100 inner-container">
+                        <div class="card-body text-center">
+                            <div id="profile_picture_big">
+                                {% if user.profile_picture %}
+                                    <img src="{{ user.profile_picture.url }}" id="profile_picture_img" alt="User Image" class="user-icon">
+                                {% else %}
+                                    <i class="fas fa-regular fa-user custom-icon" id="profile_picture_img" style="color: #000000;"></i>
+                                {% endif %}
+                            </div>
+                            <h5 class="my-3">{{user.first_name|capfirst}} {{user.last_name|capfirst}}</h5>
+                            <p class="text-muted mb-1"> {{user.role|capfirst}} </p>
+                            <div id="form_picture" style="display: none;">
+                                <form method="POST" name="form_picture" id="form_picture_form" enctype="multipart/form-data" >
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="{{ form.profile_picture.id_for_label }}">Change Profile Picture</label>
+                                        <div class="custom-file">
+                                            {{ form.profile_picture }}
+                                            <label class="custom-file-label" for="{{ form.profile_picture.id_for_label }}">Choose file</label>
+                                        </div>
+                                    </div>
+                                </form>
+                                <br>
+                                <button class="btn btn-danger" id="delete_profile_picture"> Delete Profile Picture</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8 d-flex">
+
+                    <div class="card mb-4 w-100 inner-container" >
+                        <div class="card-body">
+
+                            <div id="info" style="display: block;">
+                                <div class="row row_user">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">First Name</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p id="firstname_info" class="text-muted mb-0">{{user.first_name|capfirst}}</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row row_user" style="overflow: hidden;">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Last Name</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p id="lastname_info" class="text-muted mb-0">{{user.last_name|capfirst}}</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row row_user" style="overflow: hidden;">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Email</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p id="email_info" class="text-muted mb-0">{{user.email}}</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row row_user">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Phone</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p id="phone_info" class="text-muted mb-0">{{user.phone}}</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row row_user">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Username</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">{{user.username}}</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row row_user">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Role</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0">{{user.role}}</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row row_user">
+                                    <div class="d-grid col-sm-12 mx-auto">
+                                        <button class="btn btn-primary" id="change_button" type="button">Change Information</button>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+
+                            <form id="form_info" style="display: none;">                             
+                                    <div class="row row_user">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">First Name</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <input id="firstname_form" class="form-control form-control-sm" placeholder="First Name" type="text" value="{{user.first_name|capfirst}}">
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row row_user">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Last Name</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <input id="lastname_form" class="form-control form-control-sm" placeholder="Last Name" type="text" value="{{user.last_name|capfirst}}">
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row row_user">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Email</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <input id="email_form" class="form-control form-control-sm form_input" placeholder="Email Address" type="email" value="{{user.email}}">
+                                        </div>  
+                                    </div>
+                                    <hr>
+                                    <div class="row row_user">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Phone</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                        <input id="phone_form" class="form-control form-control-sm form_input" placeholder="Phone Number" type="tel" value="{{user.phone}}">
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row row_user">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Username</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0" id="username">{{user.username}}</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row row_user">
+                                        <div class="col-sm-3">
+                                            <p class="mb-0">Role</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">{{user.role}}</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row row_user">
+                                        <div class="d-grid col-sm-12 mx-auto">
+                                            <button type="button" class="btn btn-primary change_button" id="save_button" >Save Information</button>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                
+                            </form>
+
+                        </div>
+                    </div>
+                    
+            </div>
+            {% if user.user_submits.all and user.role == "student"%}
+                                <div class="container mt-5">
+                                    <div class="inner-container">
+                                    <h1 class="mt-5">Assignment Grades</h1>
+                                        <table class="table table-bordered mt-5 highlight-container">
+                                            <thead class="thead">
+                                                <tr>
+                                                    <th>Assignment</th>
+                                                    <th>Submit</th>
+                                                    <th>Grade</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for submit in user.user_submits.all %}
+                                                <tr>
+                                                    <td> {{ submit.submits_to_assignment.first.name }}</td>
+                                                    <td> {{ submit.name }}</td>
+                                                    <td> {{ submit.grade }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            {% endif %}
+        </div>
+    </section>
+    
+    <script src="{% static 'accounts/accounts.js' %}"></script>
+
+{% endblock %}
