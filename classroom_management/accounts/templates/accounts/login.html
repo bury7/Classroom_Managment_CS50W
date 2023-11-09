@@ -1,0 +1,23 @@
+{% extends 'classroom/layout.html' %}
+
+{% block title %}Classroom Login{% endblock %}
+
+{% block main %}
+    <div class="container highlight-container">
+        <div class="inner-container">
+            <h2 class="mt-4">Classroom Login</h2>
+            <form action="{% url 'accounts:login' %}" method="post" class="mt-4">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input class="form-control" autofocus type="text" id="username" name="username" placeholder="Username">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input class="form-control" type="password" id="password" name="password" placeholder="Password">
+                </div>
+                <button class="btn btn-primary" type="submit">Login</button>
+                {% csrf_token %}
+            </form>
+        </div>
+    </div>
+{% endblock %}
