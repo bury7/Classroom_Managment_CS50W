@@ -1,0 +1,225 @@
+{% extends 'classroom/layout.html' %}
+
+{% load static %}
+
+{% block title %}Classroom {{classroom.name}}{% endblock %}
+
+{% block main %}
+    <div class="container mt-5">
+        <div id="main_info">
+            <div id="info_classroom" class="container mt-3">
+                <section class="highlight-container">
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <h1 id="name_info_classroom">{{ classroom.name }}</h1>
+                            <p id="theme_info_classroom">{% if classroom.theme %} <strong>Theme:</strong>  {{ classroom.theme }} {% endif %}</p>
+                            <p id="description_info_classroom">{%if classroom.description%} <strong>Description:</strong>  {{classroom.description}} {% endif %}</p>
+                            <p><strong>Teacher:</strong> {{classroom.teacher.first_name}} {{classroom.teacher.last_name}}</p>
+                            <div id="link_placeholder">
+                                {% if classroom.link %}
+                                    <a id="link_info_classroom"  class="btn btn-info btn-sm" href="{{classroom.link}}"><strong>Link to join meeting</strong></a>
+                                {% endif %}
+                            </div>
+                            {% if request.user == classroom.teacher %}
+                                <button id="edit_button" class="btn btn-primary" style="margin-top: 10px;">Edit</button>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-3 d-flex justify-content-center align-items-center" title="Invitation Link (click to copy)">
+                            <div id="qrcode" class="animated-qrcode"></div>
+                            <div id="copied-text" class="copied-text">Copied</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            {% if request.user == classroom.teacher %}
+                <div id="form" class="container mt-5" style="display: none;">
+                    <section class="highlight-container">
+                        <div class="row">
+                            <div class="col-lg-11">
+                                <div class="form-group">
+                                    <p style="display: inline-block; margin-right: 10px;"><strong>Name:</strong></p>
+                                    <input value="{{ classroom.name }}" id="name_form_classroom" class="form-control" type="text" placeholder="Enter Name"> 
+                                </div>
+                            
+                                <div class="form-group">
+                                    <p style="display: inline-block; margin-right: 10px;"><strong>Theme:</strong></p>
+                                    <input id="theme_form_classroom" class="form-control" type="text" placeholder="Enter Theme" {% if classroom.theme %} value="{{ classroom.theme }}"{% endif %}>
+                                </div>  
+                            
+                            
+                                <div class="form-group">
+                                    <p style="display: inline-block; margin-right: 10px;"><strong>Description:</strong></p>
+                                    <textarea id="description_form_classroom" class="form-control" rows="3" placeholder="Enter Classroom Description">{% if classroom.description %}{{ classroom.description }} {% endif %}</textarea>
+                                </div>
+                            
+                                <p><strong>Teacher:</strong> {{classroom.teacher.first_name}} {{classroom.teacher.last_name}}</p>
+                                    <p style="display: inline-block; margin-right: 10px;"><strong>Link to join:</strong></p>
+                                    <input id="link_form_classroom" type="url" class="form-control" placeholder="Enter Classroom Link (Zoom, Google Meet...)" {% if classroom.link %} value="{{classroom.link}}" {% endif %}>
+                                <br>
+                            </div>
+                        </div>
+                        <input id="save_button" type="submit" class="btn btn-primary" value="Save">
+                        <input id="close_button_classroom" type="submit" class="btn btn-secondary" value="Close">
+                        <input type="submit" id="delete_button" class="btn btn-danger float-right" value="Delete">  
+                    </section>
+                </div>
+                <div class="container">
+                    <div class="dropdown mt-3 highlight-container">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="createDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Create
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="createDropdown">
+                            <a class="dropdown-item" id="create_assignment">Create Assignment</a>
+                            <a class="dropdown-item" id="create_material">Create Material</a>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            {% endif %}
+            
+            <div class="container">
+                <div class="mt-3 highlight-container">
+                    <ul class="list-group" id="assignments">
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {% if request.user == classroom.teacher %}
+            <div class="highlight-container" role="document" id="create_material_form" style="display: none;">
+                <div class="modal-content inner-container">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create Material For Classroom</h5>
+                    </div>
+                    <div class="modal-body">
+                            <div class="form-group">
+                                <label for="create_material_name">Material Name:</label>
+                                <input type="text" class="form-control" id="create_material_name" placeholder="Enter Material Name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="create_material_description">Material Instructions (Optional):</label>
+                                <textarea id="create_material_description" class="form-control" rows="3" placeholder="Enter Material Description"></textarea>
+                            </div>
+
+                            <form method="POST" id="create_material_files" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <label>Files (Optional):</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="create_material_file_input" multiple name="files">
+                                    <label class="custom-file-label" for="create_material_file_input">Choose Files</label>
+                                </div>
+                                <div id="selected-files-material" class="mt-2"></div>
+                            </form>
+                            <button id="clear-files-material" class="btn btn-danger mt-3">Clear All</button>
+
+                            <br>
+                            <br>
+                            <div class="form-group">
+                                <label for="create_material_link">Links (Optional):</label>
+                                <input type="text" class="form-control" id="create_material_link" placeholder="Enter Material Link">
+                                <br>
+                                <button type="button" class="btn btn-info" id="add_material_link">Add Link</button>
+                            </div>
+                            <div class="form-group" id="create_material_links">
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="create_material_save">Create</button>
+                        <button type="button" class="btn btn-secondary" id="create_material_close" data-dismiss="modal">Close</button> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-container" role="document" id="create_assignment_form" style="display: none;">
+                <div class="modal-content inner-container">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create Assignment For Classroom</h5>
+                    </div>
+                    <div class="modal-body">
+                            <div class="form-group">
+                                <label for="create_assignment_name">Assignment Name:</label>
+                                <input type="text" class="form-control" id="create_assignment_name" placeholder="Enter Assignment Name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="create_assignment_description">Assignment Instructions (Optional):</label>
+                                <textarea id="create_assignment_description" class="form-control" rows="3" placeholder="Enter Assignment Description"></textarea>
+                            </div>
+                            <form>
+                                {% csrf_token %}
+                                {{ deadline_form }} 
+                                <p>
+                                <input type="checkbox" id="nodeadline" name="fav_language" value="nodeadline">
+                                <label for="nodeadline">Without Deadline</label>
+                            </form>
+                            
+                            
+                            <form method="POST" id="create_assignment_files" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <label>Files (Optional):</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="create_assignment_file_input" multiple name="files">
+                                    <label class="custom-file-label" for="create_assignment_file_input">Choose Files</label>
+                                </div>
+                                <div id="selected-files-assignment" class="mt-2"></div>
+                            </form>
+                            <button id="clear-files-assignment" class="btn btn-danger mt-3">Clear All</button>
+
+                            <br>
+                            <br>
+                            <div class="form-group">
+                                <label for="create_assignment_link">Links (Optional):</label>
+                                <input type="text" class="form-control" id="create_assignment_link" placeholder="Enter Assignment Link">
+                                <br>
+                                <button type="button" class="btn btn-info" id="add_assignment_link">Add Link</button>
+                            </div>
+                            <div class="form-group" id="create_assignment_links">
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="create_assignment_save">Create</button>
+                        <button type="button" class="btn btn-secondary" id="create_assignment_close" data-dismiss="modal">Close</button> 
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        
+    
+
+        
+        
+    </div>
+
+
+
+    {% if request.user == classroom.teacher %}
+        <script src="{% static 'classroom/teacher_classroom.js' %}"></script>
+        <script src="{% static 'classroom/teacher_create.js' %}"></script>
+        <script src="{% static 'qrcode/js/qrcode.js' %}" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+        <script>
+            var typeNumber = 15;
+            var url = "{{ full_url }}";
+            var errorCorrectionLevel = 'L';
+            var qr = qrcode(typeNumber, errorCorrectionLevel);
+            qr.addData(url);
+            qr.make();
+            document.getElementById('qrcode').innerHTML = qr.createImgTag();
+
+            var clipboard = new ClipboardJS('#qrcode', {
+                text: function() {
+                    return url;
+                }
+            });
+
+            clipboard.on('error', function(e) {
+                console.error('Copy failed:', e.action);
+            });
+        </script>
+    {% endif %}
+    <script src="{% static 'classroom/classroom.js' %}"></script>
+
+{% endblock %}
